@@ -1,0 +1,17 @@
+<script src="Class.js"></script>
+<script>
+var Root = Class.create({
+	a: function(){alert('root a')},
+	b: function () {alert('root b')}
+});
+var root = Root.init();
+var SubRoot = Root.create({
+	init: function(){this.test = 123;},
+	a: function () {this.parent();alert('subRoot a')},
+	c: function () {this.parent();alert('subRoot c')}
+});
+var subRoot = SubRoot.init();
+subRoot.a();
+subRoot.b();
+subRoot.c();
+</script>
