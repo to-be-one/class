@@ -10,8 +10,12 @@
     });
     var root = Root.init();
     var SubRoot = Root.create({
-        init : function() {
-            this.test = 123;
+        init : function(obj) {
+            if (obj) {
+                for(var k in obj){
+                    this[k] = obj[k];
+                }
+            }
         },
         a : {
             handler: function() {
@@ -23,8 +27,9 @@
             alert('subRoot c')
         }
     });
-    var subRoot = SubRoot.init();
+    var subRoot = SubRoot.init({a1:12,b1:{c1:23}});
     subRoot.a();
     subRoot.b();
     subRoot.c();
+    console.log(subRoot)
 </script>

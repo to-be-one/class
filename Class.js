@@ -10,20 +10,29 @@ var Class = function () {
          *      }
          *  @return {Class的子类} 返回调用者的子类
          */
-        create: function (methods) {
+        create: function (Parent, methods) {
             var parent = null;
             if (Root !== this) {
                 parent = this;
             }
-            var F = function () {
-                if (parent) {
-                    this.superClass = parent.prototype;
+            // 仅当是Root.create时，允许传入父类
+            if (parent === null) {
+                if (typeof Parent === 'function') {
+                    parent = Parent;
+                } else {
+                    methods = Parent;
+                    Parent = null;
                 }
-                this.init && this.init(arguments);
+            } else if (!methods) {
+                methods = Parent;
+                Parent = null;
+            }
+            methods = methods || {};
+            var F = function () {
+                this.init && this.init.apply(this, arguments);
             };
             if (parent) {
                 F.prototype = new parent();
-                F.prototype.constructor = F;
             }
             for (var name in methods) {
                 if (methods.hasOwnProperty(name)) {
@@ -42,12 +51,16 @@ var Class = function () {
                     }(method, parent && parent.prototype[name], override);
                 }
             }
+            if (parent) {
+                F.prototype.superClass = parent;
+                F.prototype.constructor = F;
+            }
             F.create = Root.create;
             F.init = Root.init;
             return F;
         },
-        init: function () {
-            return new this(arguments);
+        init: function (options) { // 暂时只支持1个参数
+            return new this(options);
         }
     };
 }();
