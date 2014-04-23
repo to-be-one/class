@@ -1,17 +1,30 @@
 <script src="Class.js"></script>
 <script>
-var Root = Class.create({
-	a: function(){alert('root a')},
-	b: function () {alert('root b')}
-});
-var root = Root.init();
-var SubRoot = Root.create({
-	init: function(){this.test = 123;},
-	a: function () {this.superClass.b();alert('subRoot a')},
-	c: function () {alert('subRoot c')}
-});
-var subRoot = SubRoot.init();
-subRoot.a();
-subRoot.b();
-subRoot.c();
+    var Root = Class.create({
+        a : function() {
+            alert('root a')
+        },
+        b : function() {
+            alert('root b')
+        }
+    });
+    var root = Root.init();
+    var SubRoot = Root.create({
+        init : function() {
+            this.test = 123;
+        },
+        a : {
+            handler: function() {
+                alert('subRoot a')
+            },
+            override: true
+        },
+        c : function() {
+            alert('subRoot c')
+        }
+    });
+    var subRoot = SubRoot.init();
+    subRoot.a();
+    subRoot.b();
+    subRoot.c();
 </script>

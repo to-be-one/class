@@ -1,9 +1,18 @@
 var Class = function () {
-    var Class;
-    return Class = {
+    var Root;
+    return Root = {
+        /**
+         * @param {methods}，{key} method名字，{value} method 或者 {object}
+         * {methods}.{value}为{object}时，{object}结构
+         *      {
+         *          override: true,（可选）是否重写父类同名方法
+         *          handler:  method
+         *      }
+         *  @return {Class的子类} 返回调用者的子类
+         */
         create: function (methods) {
             var parent = null;
-            if (Class !== this) {
+            if (Root !== this) {
                 parent = this;
             }
             var F = function () {
@@ -18,16 +27,23 @@ var Class = function () {
             }
             for (var name in methods) {
                 if (methods.hasOwnProperty(name)) {
-                    F.prototype[name] = (function(name, method, parentMethod) {
+                    var method = methods[name];
+                    var override = false;
+                    if (typeof method !== 'function') {
+                        override = method.override;
+                        method = method.handler;
+                    }
+                    F.prototype[name] = function(method, parentMethod, override) {
                         return function() {
-                            parentMethod && parentMethod.apply(this, arguments);
+                            !override && parentMethod
+                                && parentMethod.apply(this, arguments);
                             return method.apply(this, arguments);
                         };
-                    })(name, methods[name], parent && parent.prototype[name]);
+                    }(method, parent && parent.prototype[name], override);
                 }
             }
-            F.create = Class.create;
-            F.init = Class.init;
+            F.create = Root.create;
+            F.init = Root.init;
             return F;
         },
         init: function () {
