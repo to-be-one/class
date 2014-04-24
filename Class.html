@@ -1,13 +1,15 @@
 <script src="Class.js"></script>
 <script>
+    Class.enhance = true;
     var Root = Class.create({
         a : function() {
-            alert('root a')
+            console.log('root a')
         },
         b : function() {
-            alert('root b')
+            console.log('root b')
         }
     });
+    var root1 = Root.init();
     var root = Root.init();
     var SubRoot = Root.create({
         init : function(obj) {
@@ -19,17 +21,22 @@
         },
         a : {
             handler: function() {
-                alert('subRoot a')
+                console.log('subRoot a')
             },
             override: true
         },
         c : function() {
-            alert('subRoot c')
+            console.log('subRoot c')
         }
     });
     var subRoot = SubRoot.init({a1:12,b1:{c1:23}});
     subRoot.a();
     subRoot.b();
     subRoot.c();
-    console.log(subRoot)
+   var subRoot = SubRoot.init({a1:12,b1:{c1:23}});
+   
+   root.dispose();
+   console.log(root1, root);
+   console.log(Root.all());
+   console.log(SubRoot.all());
 </script>
